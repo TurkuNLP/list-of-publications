@@ -84,6 +84,11 @@ for ptype in ptypes:
     records=[]
     for bib_type in ptype.bibtypes:
         records.extend(matching.get(bib_type,[]))
+    for r in records:
+        if "year" not in r:
+            print("WARNING: record {} had no year".format(r["ID"]),file=sys.stderr)
+            print(r,file=sys.stderr)
+
     records.sort(key=lambda rec:rec["year"],reverse=True)
     if records:
         #Found something

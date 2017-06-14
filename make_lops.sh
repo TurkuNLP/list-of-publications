@@ -26,7 +26,7 @@ function make_lop {
 make_lop ginter "Filip Ginter" Ginter
 make_lop kanerva "Jenna Kanerva" Kanerva Nyblom
 make_lop mehryary "Farrokh Mehryary" Mehryary
-make_lop lutolahti "Juhani Luotolahti" Luotolahti
+make_lop luotolahti "Juhani Luotolahti" Luotolahti
 
 
 
