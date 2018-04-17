@@ -24,7 +24,7 @@ function make_lop {
 
 #       directory  latexname   search
 make_lop ginter "Filip Ginter" Ginter
-make_lop kanerva "Jenna Kanerva" Kanerva Nyblom
+make_lop kanerva "Jenna Kanerva (Nyblom)" Kanerva Nyblom
 make_lop mehryary "Farrokh Mehryary" Mehryary
 make_lop luotolahti "Juhani Luotolahti" Luotolahti
 
