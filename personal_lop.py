@@ -97,7 +97,7 @@ for ptype in ptypes:
         bibstyles.append(r"\bibliographystyle{}{{unsrtnat-nourl}}\bibliography{}{{turkunlp}}".format(ptype.label,ptype.label))
         
         for r in records:
-            cites.append(r"\nocite{}{{{}}}".format(ptype.label,r["ID"]))
+            cites.append(r"\nocite{}{{{}}} %%%{}".format(ptype.label,r["ID"],r["title"]))
 
 p=preamble.replace("%%%NEWCITESDEFS%%%","\n".join(newcitedefs))
 p=p.replace("%%%LATEXAUTHOR%%%",args.latexauthor[0])
