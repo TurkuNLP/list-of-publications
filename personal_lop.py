@@ -28,7 +28,7 @@ preamble=r"""
 \pdfpagewidth=\paperwidth
 \pdfpageheight=\paperheight
 
-%\newcites{rel}{10 co-authored publications most relevant to the proposal (also repeated in their relevant category listing)}
+
 
 %%%NEWCITESDEFS%%%
 
@@ -52,6 +52,7 @@ parser = argparse.ArgumentParser(description='Generate a .tex which compiles int
 parser.add_argument('--latexauthor', dest='latexauthor', nargs=1,help='The author field of the latex document, your name.',required=True)
 parser.add_argument('-a','--author', dest='author', nargs="+",help='Space-separated strings to look for in the author E.g. --author Kanerva Nyblom',required=True)
 parser.add_argument('-e','--editor', dest='editor', action='store_true',help='Also look in the editor field.')
+parser.add_argument('-r','--relevant', dest='relevant', default="", nargs=1, help='Comma-separated (no space) list of bibids to produce the related citations part, if any')
 
 args = parser.parse_args()
 with open("turkunlp.bib") as f:
@@ -99,6 +100,12 @@ for ptype in ptypes:
         for r in records:
             cites.append(r"\nocite{}{{{}}} %%%{}".format(ptype.label,r["ID"],r["title"]))
 
+if args.relevant:
+    bibstyles.insert(0,r"\bibliographystyle{}{{unsrtnat-nourl}}\bibliography{}{{turkunlp}}".format("rel","rel"))
+    newcitedefs.insert(0,r"\newcites{rel}{Co-authored publications most relevant to the proposal (also repeated in their relevant category listing)}")
+    for x in args.relevant[0].split(",")[::-1]:
+        cites.insert(0,r"\nociterel{{{}}}".format(x))
+            
 p=preamble.replace("%%%NEWCITESDEFS%%%","\n".join(newcitedefs))
 p=p.replace("%%%LATEXAUTHOR%%%",args.latexauthor[0])
 p=p.replace("%%%CITES%%%","\n".join(cites))
