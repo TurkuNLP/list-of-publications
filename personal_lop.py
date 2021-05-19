@@ -53,6 +53,7 @@ parser.add_argument('--latexauthor', dest='latexauthor', nargs=1,help='The autho
 parser.add_argument('-a','--author', dest='author', nargs="+",help='Space-separated strings to look for in the author E.g. --author Kanerva Nyblom',required=True)
 parser.add_argument('-e','--editor', dest='editor', action='store_true',help='Also look in the editor field.')
 parser.add_argument('-r','--relevant', dest='relevant', default="", nargs=1, help='Comma-separated (no space) list of bibids to produce the related citations part, if any')
+parser.add_argument('-y','--year-since', dest='year', default=1800, nargs=1, type=int,  help='Only publications whose year is greater or equal to this')
 
 args = parser.parse_args()
 with open("turkunlp.bib") as f:
@@ -61,6 +62,11 @@ with open("turkunlp.bib") as f:
 matching={} #type -> [pubs]
 
 for x in db.entries:
+    #whih year?
+    y=x["year"].split()[0] #sometimes these go like "2018 (to appear)"
+    y=int(y)
+    if y<args.year[0]:
+        continue
     for n in args.author:
         if n in x.get("author","") or (args.editor and n in x.get("editor","")):
             matching.setdefault(x["ENTRYTYPE"],[]).append(x)
