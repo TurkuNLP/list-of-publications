@@ -65,7 +65,7 @@ for x in db.entries:
     #whih year?
     y=x["year"].split()[0] #sometimes these go like "2018 (to appear)"
     y=int(y)
-    if y<args.year[0]:
+    if y<args.year:
         continue
     for n in args.author:
         if n in x.get("author","") or (args.editor and n in x.get("editor","")):
