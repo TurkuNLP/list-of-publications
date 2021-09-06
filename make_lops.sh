@@ -6,7 +6,9 @@ function make_lop {
     echo $author
     rm -rf $dirname
     mkdir $dirname
-    python3 personal_lop.py --latex "$author" --author $* -e -r "$FILIP_AKA_2020" > $dirname/$dirname.tex
+    ### IF YOU WANT TO HAVE RELEVANT PUBS FOR AKA, DO IT HERE LIKE THIS:
+    #python3 personal_lop.py --latex "$author" --author $* -e -r "$FILIP_AKA_2020" > $dirname/$dirname.tex
+    python3 personal_lop.py --latex "$author" --author $* -e  > $dirname/$dirname.tex
     cd $dirname
     ln -s ../turkunlp.bib .
     ln -s ../unsrtnat-nourl.bst .
