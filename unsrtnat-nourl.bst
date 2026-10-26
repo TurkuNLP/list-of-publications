@@ -53,6 +53,7 @@ ENTRY
     eid
     edition
     editor
+    firstauthor
     howpublished
     institution
     isbn
@@ -213,6 +214,36 @@ FUNCTION {emphasize}
 
 INTEGERS { nameptr namesleft numnames }
 
+%% --- shared first authorship -------------------------------------------
+%% bib field:  firstauthor = "1,2"   (author positions, no spaces)
+%% Every author at a listed position gets \eqcontrib{<Surname>} appended.
+%% Which surnames actually show a star is decided in the .tex file.
+INTEGERS { mark.equal fa.i fa.found fa.len }
+STRINGS { fa.list fa.needle }
+
+FUNCTION {is.first.author}
+{ firstauthor empty$
+    { #0 }
+    { "," firstauthor * "," * 'fa.list :=
+      "," nameptr int.to.str$ * "," * 'fa.needle :=
+      fa.needle text.length$ 'fa.len :=
+      #0 'fa.found :=
+      #1 'fa.i :=
+        { fa.found #0 =
+          fa.i fa.list text.length$ fa.len - #2 + <
+          and }
+        { fa.list fa.i fa.len substring$ fa.needle =
+            { #1 'fa.found := }
+            { fa.i #1 + 'fa.i := }
+          if$
+        }
+      while$
+      fa.found
+    }
+  if$
+}
+%% ------------------------------------------------------------------------
+
 FUNCTION {format.names}
 { 's :=
   #1 'nameptr :=
@@ -220,6 +251,10 @@ FUNCTION {format.names}
   numnames 'namesleft :=
     { namesleft #0 > }
     { s nameptr "{ff~}{vv~}{ll}{, jj}" format.name$ 't :=
+      mark.equal is.first.author and
+        { t "\eqcontrib{" * s nameptr "{ll}" format.name$ * "}" * 't := }
+        'skip$
+      if$
       nameptr #1 >
         { namesleft #1 >
             { ", " * t * }
@@ -252,7 +287,10 @@ FUNCTION {format.key}
 FUNCTION {format.authors}
 { author empty$
     { "" }
-    { author format.names }
+    { #1 'mark.equal :=
+      author format.names
+      #0 'mark.equal :=
+    }
   if$
 }
 
@@ -1297,6 +1335,8 @@ FUNCTION {begin.bib}
   "\begin{thebibliography}{" number.label int.to.str$ * "}" *
   write$ newline$
   "\providecommand{\natexlab}[1]{#1}"
+  write$ newline$
+  "\providecommand{\eqcontrib}[1]{\textsuperscript{*}}"
   write$ newline$
   "\providecommand{\url}[1]{\texttt{#1}}"
   write$ newline$
